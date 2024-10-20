@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FCFS Simulation</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f7f6;
+        color: #333;
+        margin: 0;
+        padding: 20px;
+      }
+
+      h1 {
+        text-align: center;
+        color: #4caf50;
+      }
+
+      form {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        margin: 20px auto;
+      }
+
+      label {
+        font-weight: bold;
+        margin-right: 10px;
+      }
+
+      input[type="number"] {
+        width: 60px;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-bottom: 10px;
+      }
+
+      button {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 10px;
+      }
+
+      button:hover {
+        background-color: #45a049;
+      }
+
+      h3 {
+        color: #4caf50;
+      }
+
+      #tienTrinhInputs div {
+        background-color: #f9f9f9;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 4px;
+      }
+
+      h2 {
+        text-align: center;
+        color: #333;
+      }
+
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      li {
+        background-color: #e7f4e7;
+        padding: 10px;
+        margin-bottom: 5px;
+        border-radius: 4px;
+        text-align: center;
+      }
+    </style>
+    <script>
+      function generateInputFields() {
+        const soTienTrinh = document.getElementById("soTienTrinh").value;
+        const container = document.getElementById("tienTrinhInputs");
+        const submitButton = document.getElementById("submitButton");
+
+        // Xóa các trường nhập hiện tại
+        container.innerHTML = "";
+
+        // Tạo các trường nhập liệu dựa trên số tiến trình
+        for (let i = 0; i < soTienTrinh; i++) {
+          const div = document.createElement("div");
+          div.innerHTML = `
+                    <h3>Tiến trình ${i + 1}</h3>
+                    <label for="xuatHien_${i}">Thời gian xuất hiện:</label>
+                    <input type="number" id="xuatHien_${i}" name="xuatHien_${i}" min="0" required>
+                    <label for="suDung_${i}">Thời gian sử dụng CPU:</label>
+                    <input type="number" id="suDung_${i}" name="suDung_${i}" min="0" required>
+                `;
+          container.appendChild(div);
+        }
+
+        // Hiện nút "Tính toán" chỉ khi có trường nhập liệu
+        submitButton.style.display = "block";
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Thuật toán FCFS</h1>
+    <form method="POST">
+      <label for="soTienTrinh">Nhập số lượng tiến trình:</label>
+      <input
+        type="number"
+        id="soTienTrinh"
+        name="soTienTrinh"
+        value="{{ soTienTrinh }}"
+        min="1"
+        required
+      />
+      <button type="button" onclick="generateInputFields()">
+        Tạo các trường nhập
+      </button>
+      <br /><br />
+
+      <div id="tienTrinhInputs"></div>
+
+      <!-- Nút Tính toán sẽ ẩn cho đến khi các trường nhập liệu được tạo -->
+      <button type="submit" id="submitButton" style="display: none">
+        Tính toán
+      </button>
+    </form>
+
+    {% if ket_qua %}
+    <h2>Kết quả</h2>
+    <ul>
+      {% for ket in ket_qua %}
+      <li>{{ ket }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </body>
+</html>
