@@ -19,12 +19,22 @@
       }
 
       form {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Căn giữa theo chiều ngang */
         background-color: #fff;
         padding: 20px;
         border-radius: 8px;
         box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
         max-width: 600px;
         margin: 20px auto;
+      }
+
+      .input-group {
+        display: flex;
+        justify-content: center; /* Căn giữa theo chiều ngang */
+        align-items: center; /* Căn giữa theo chiều dọc */
+        margin-bottom: 20px; /* Khoảng cách giữa các hàng */
       }
 
       label {
@@ -37,7 +47,7 @@
         padding: 8px;
         border: 1px solid #ccc;
         border-radius: 4px;
-        margin-bottom: 10px;
+        margin-right: 10px; /* Khoảng cách giữa ô nhập và nút */
       }
 
       button {
@@ -47,7 +57,6 @@
         border: none;
         border-radius: 4px;
         cursor: pointer;
-        margin-top: 10px;
       }
 
       button:hover {
@@ -84,13 +93,19 @@
       }
     </style>
     <script>
+      let fieldsCreated = false; // Biến kiểm tra
+
       function generateInputFields() {
         const soTienTrinh = document.getElementById("soTienTrinh").value;
         const container = document.getElementById("tienTrinhInputs");
         const submitButton = document.getElementById("submitButton");
+        const resultsContainer = document.getElementById("ketQuaContainer"); // Thêm phần này
 
         // Xóa các trường nhập hiện tại
         container.innerHTML = "";
+
+        // Xóa kết quả trước đó
+        resultsContainer.innerHTML = ""; // Xóa kết quả hiển thị
 
         // Tạo các trường nhập liệu dựa trên số tiến trình
         for (let i = 0; i < soTienTrinh; i++) {
@@ -107,41 +122,57 @@
 
         // Hiện nút "Tính toán" chỉ khi có trường nhập liệu
         submitButton.style.display = "block";
+        fieldsCreated = true; // Đánh dấu rằng các trường đã được tạo
       }
+
+      // Ngăn không cho gửi biểu mẫu khi chưa tạo trường nhập liệu
+      document.addEventListener("DOMContentLoaded", function () {
+        document
+          .querySelector("form")
+          .addEventListener("submit", function (event) {
+            if (!fieldsCreated) {
+              event.preventDefault(); // Ngăn chặn gửi biểu mẫu
+              alert("Vui lòng tạo các trường nhập trước khi tính toán."); // Thông báo cho người dùng
+            }
+          });
+      });
     </script>
   </head>
   <body>
     <h1>Thuật toán FCFS</h1>
     <form method="POST">
-      <label for="soTienTrinh">Nhập số lượng tiến trình:</label>
-      <input
-        type="number"
-        id="soTienTrinh"
-        name="soTienTrinh"
-        value="{{ soTienTrinh }}"
-        min="1"
-        required
-      />
-      <button type="button" onclick="generateInputFields()">
-        Tạo các trường nhập
-      </button>
-      <br /><br />
+      <div class="input-group">
+        <label for="soTienTrinh">Nhập số lượng tiến trình:</label>
+        <input
+          type="number"
+          id="soTienTrinh"
+          name="soTienTrinh"
+          value="{{ soTienTrinh }}"
+          min="1"
+          required
+        />
+        <button type="button" onclick="generateInputFields()">
+          Tạo các trường nhập
+        </button>
+      </div>
 
       <div id="tienTrinhInputs"></div>
 
-      <!-- Nút Tính toán sẽ ẩn cho đến khi các trường nhập liệu được tạo -->
       <button type="submit" id="submitButton" style="display: none">
         Tính toán
       </button>
     </form>
 
-    {% if ket_qua %}
-    <h2>Kết quả</h2>
-    <ul>
-      {% for ket in ket_qua %}
-      <li>{{ ket }}</li>
-      {% endfor %}
-    </ul>
-    {% endif %}
+    <div id="ketQuaContainer">
+      <!-- Thêm phần này để chứa kết quả -->
+      {% if ket_qua %}
+      <h2>Kết quả</h2>
+      <ul>
+        {% for ket in ket_qua %}
+        <li>{{ ket }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </div>
   </body>
 </html>
